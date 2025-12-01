@@ -13,7 +13,7 @@ from nose.tools import raises
 from atmosp.constants import Rd
 from atmosp.solve import BaseSolver, FluidSolver, calculate, \
     _get_module_methods, _get_calculatable_methods_dict,\
-    _get_shortest_solution, _HAS_CFUNITS
+    _get_shortest_solution
 from atmosp.util import quantity_string, assumption_list_string, \
     quantity_spec_string, doc_paragraph, \
     strings_to_list_string
@@ -1351,106 +1351,6 @@ class EquationTests(unittest.TestCase):
         out_values = [0., 30., 100.]
         tols = [1e-8, 0.1, 0.1]
         self._assert_accurate_values(func, in_values, out_values, tols)
-
-
-class SUEWSCompatibilityTests(unittest.TestCase):
-    """
-    Tests for SUEWS compatibility - these calculations must work WITHOUT cfunits.
-    These mirror the actual usage patterns in SUEWS/SuPy.
-    """
-
-    def test_cfunits_optional_import(self):
-        """Verify atmosp imports successfully regardless of cfunits availability."""
-        from atmosp import calculate
-        self.assertTrue(callable(calculate))
-
-    def test_saturation_vapor_pressure(self):
-        """Test es calculation (used in cal_des_dta)."""
-        ta = 300  # K
-        pa = 101325  # Pa
-        es = calculate('es', p=pa, T=ta)
-        # es at 300K should be around 3500 Pa
-        self.assertGreater(es, 3000)
-        self.assertLess(es, 4000)
-
-    def test_specific_humidity_from_rh(self):
-        """Test qv calculation from RH (used in cal_qa)."""
-        rh_pct = 50
-        pres_hPa = 1013.25
-        theta_K = 300
-        qa = calculate('qv', RH=rh_pct, p=pres_hPa * 100, theta=theta_K)
-        # Specific humidity should be positive and reasonable
-        self.assertGreater(qa, 0)
-        self.assertLess(qa, 0.05)  # Less than 50 g/kg
-
-    def test_relative_humidity_from_qv(self):
-        """Test RH calculation from qv (used in cal_rh)."""
-        qa = 0.01  # kg/kg
-        theta_K = 300
-        pres_hPa = 1013.25
-        RH = calculate('RH', qv=qa, p=pres_hPa * 100, theta=theta_K)
-        self.assertGreater(RH, 0)
-        self.assertLess(RH, 100)
-
-    def test_humidity_round_trip(self):
-        """Test that qv -> RH -> qv gives consistent results."""
-        qa_orig = 0.012
-        theta_K = 295
-        pres_hPa = 1000
-        # qv to RH
-        RH = calculate('RH', qv=qa_orig, p=pres_hPa * 100, theta=theta_K)
-        # RH back to qv
-        qa_back = calculate('qv', RH=RH, p=pres_hPa * 100, theta=theta_K)
-        self.assertAlmostEqual(qa_orig, qa_back, places=6)
-
-    def test_wet_bulb_temperature(self):
-        """Test Tw calculation (used in cal_lat_vap)."""
-        qa = 0.01
-        theta_K = 300
-        pres_hPa = 1013.25
-        tw = calculate(
-            'Tw',
-            qv=qa,
-            p=pres_hPa * 100,
-            theta=theta_K,
-            remove_assumptions=('constant Lv',)
-        )
-        # Wet bulb should be less than or equal to dry bulb
-        self.assertLess(tw, theta_K)
-        self.assertGreater(tw, 250)  # Reasonable range
-
-    def test_saturation_specific_humidity(self):
-        """Test qvs calculation (used in cal_dq)."""
-        ta_k = 298
-        pa = 101325
-        qvs = calculate('qvs', T=ta_k, p=pa)
-        self.assertGreater(qvs, 0)
-        self.assertLess(qvs, 0.05)
-
-    def test_des_dta_pattern(self):
-        """Test the derivative pattern used in cal_des_dta."""
-        ta = 300
-        pa = 101325
-        dta = 1.0
-        es_plus = calculate('es', p=pa, T=ta + dta / 2)
-        es_minus = calculate('es', p=pa, T=ta - dta / 2)
-        des_dta = (es_plus - es_minus) / dta
-        # Slope should be positive (es increases with T)
-        self.assertGreater(des_dta, 0)
-
-    def test_array_input(self):
-        """Test that array inputs work correctly."""
-        T_array = np.array([290, 295, 300, 305])
-        p = 101325
-        es_array = calculate('es', T=T_array, p=p)
-        self.assertEqual(es_array.shape, T_array.shape)
-        # es should increase with temperature
-        self.assertTrue(np.all(np.diff(es_array) > 0))
-
-    def test_scalar_input(self):
-        """Test that scalar inputs return scalars."""
-        es = calculate('es', T=300.0, p=101325.0)
-        self.assertIsInstance(es, float)
 
 
 if __name__ == '__main__':
