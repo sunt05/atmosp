@@ -14,8 +14,15 @@ _*_float64.pyx
 .spyderworkspace
 
 # Local install egg
-*.egg-info
+*.egg-info/
 
 # build directory
-build
-dist
+build/
+dist/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/

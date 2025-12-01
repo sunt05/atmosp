@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=61.0", "setuptools-scm>=8.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "atmosp"
+dynamic = ["version"]
+description = "Atmospheric sciences utility library"
+readme = "README.rst"
+license = "MIT"
+authors = [
+    {name = "Ting Sun", email = "sunting.05@gmail.com"}
+]
+keywords = ["atmosp", "atmospheric", "equations", "geoscience", "science"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "six>=1.9.0",
+    "numexpr>=2.3.0",
+    "numpy>=1.6",
+    "cfunits>=1.0",
+    "scipy>=0.9.0",
+    "matplotlib>=1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/sunt05/atmosp"
+Repository = "https://github.com/sunt05/atmosp"
+
+[tool.setuptools.packages.find]
+include = ["atmosp*"]
+
+[tool.setuptools_scm]
+version_scheme = "guess-next-dev"
+local_scheme = "no-local-version"
