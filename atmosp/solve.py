@@ -10,7 +10,12 @@ import numpy as np
 from six import add_metaclass, string_types
 from textwrap import wrap
 import re
-import cfunits
+try:
+    import cfunits
+    _HAS_CFUNITS = True
+except ImportError:
+    _HAS_CFUNITS = False
+    cfunits = None
 try:
     # Python >= 2.7
     from inspect import getfullargspec
@@ -309,10 +314,11 @@ lists for subclasses of BaseSolver.
                     dct['__doc__'], dct['_equation_module'],
                     dct['default_assumptions'])
             dct['_ref_units'] = {}
-            for quantity in dct['_equation_module'].quantities.keys():
-                dct['_ref_units'][quantity] = \
-                    cfunits.Units(dct['_equation_module'].quantities[
-                        quantity]['units'])
+            if _HAS_CFUNITS:
+                for quantity in dct['_equation_module'].quantities.keys():
+                    dct['_ref_units'][quantity] = \
+                        cfunits.Units(dct['_equation_module'].quantities[
+                            quantity]['units'])
             assumptions = set([])
             for f in inspect.getmembers(equations):
                 try:
@@ -452,6 +458,10 @@ units of "fraction" or "percent".
                 remove_kwargs.append(kwarg)
                 if not isinstance(unit_str, string_types):
                     raise TypeError('units must be strings')
+                if not _HAS_CFUNITS:
+                    raise ImportError(
+                        'Unit conversion requires cfunits. Install with: '
+                        'pip install "atmosp[units]"')
                 self.units[var] = cfunits.Units(unit_str)
         for kwarg in remove_kwargs:
             kwargs.pop(kwarg)
