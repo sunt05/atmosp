@@ -14,7 +14,7 @@ reqs = [str(ir.req) for ir in install_reqs]
 setup(
     name='atmosp',
     packages=['atmosp'],
-    version='0.2.9',
+    version='0.2.10',
     description='Atmospheric sciences utility library',
     author='Ting Sun',
     author_email='sunting.05@gmail.com',
