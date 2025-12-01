@@ -8,7 +8,7 @@ from __future__ import division, absolute_import, unicode_literals
 import numpy as np
 import re
 import six
-from scipy.ndimage.filters import convolve1d
+from scipy.ndimage import convolve1d
 
 derivative_prog = re.compile(r'd(.+)d(p|x|y|theta|z|sigma|t|lat|lon)')
 from textwrap import wrap
