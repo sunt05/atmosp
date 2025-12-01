@@ -415,7 +415,7 @@ def es_from_T_Goff_Gratch(T):
 
 
 @autodoc(equation=r'es(T) = 611.2 exp(17.67 '
-         '\frac{T-273.15}{T-29.65})',
+         r'\frac{T-273.15}{T-29.65})',
          references=ref['Bolton 1980'] + ref['Wexler 1976'],
          notes='''
 Fits Wexler's formula to an accuracy of 0.1% for temperatures between

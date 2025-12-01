@@ -16,7 +16,7 @@ atmosp
 
 
 This is a fork version of [atmos-python/atmos]([atmos_gh](https://github.com/atmos-python/atmos)). Modifications
-are made here to enable its installation via `pip install atmos`
+are made here to enable its installation via `pip install atmosp`
 
 
 An atmospheric sciences utility library

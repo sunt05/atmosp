@@ -741,7 +741,7 @@ keyword arguments.
 Parameters
 ----------
 
-\*args : string
+*args : string
     Names of quantities to be calculated.
 assumptions : tuple, optional
     Strings specifying which assumptions to enable. Overrides the default
@@ -753,7 +753,7 @@ remove_assumptions : tuple, optional
     Strings specifying assumptions not to use from the default assumptions.
     May not be given in combination with the assumptions kwarg. May not
     contain strings that are contained in add_assumptions, if given.
-\*\*kwargs : ndarray, optional
+**kwargs : ndarray, optional
     Keyword arguments used to pass in arrays of data that correspond to
     quantities used for calculations, or unit specifications for quantities.
     For a complete list of kwargs that may be used, see the Quantity Parameters
