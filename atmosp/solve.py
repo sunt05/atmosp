@@ -13,7 +13,9 @@ import re
 try:
     import cfunits
     _HAS_CFUNITS = True
-except ImportError:
+except (ImportError, FileNotFoundError, OSError):
+    # ImportError: cfunits package not installed
+    # FileNotFoundError/OSError: cfunits installed but UDUNITS-2 library missing
     _HAS_CFUNITS = False
     cfunits = None
 try:
